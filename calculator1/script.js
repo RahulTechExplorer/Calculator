@@ -2,31 +2,40 @@ let input = document.getElementById('inputBox');
 let buttons = document.querySelectorAll('button');
 
 let string = "";
+let arr = Array.from(buttons);
+let operators = ['+', '-', '*', '/'];
 
-buttons.forEach(button => {
+arr.forEach(button => {
     button.addEventListener('click', (e) => {
-        const value = e.target.innerText;
+        let value = e.target.innerHTML;
 
-        if (value === '=') {
+        if (value == '=') {
             try {
                 string = eval(string);
-                input.value = string;
             } catch {
-                input.value = "Error";
-                string = "";
+                string = "Error";
             }
-        } else if (value === 'AC') {
-            string = "";
-            input.value = "";
-        } else if (value === 'DEL') {
-            string = string.slice(0, -1);
             input.value = string;
-        } else {
-            // Prevent multiple operators in a row
-            if (/[\+\-\*\/%]$/.test(string) && /[\+\-\*\/%]/.test(value)) {
-                return; // disallow double operator
+        }
+        else if (value == 'AC') {
+            string = "";
+            input.value = string;
+        }
+        else if (value == 'DEL') {
+            string = string.substring(0, string.length - 1);
+            input.value = string;
+        }
+        else {
+            let lastChar = string[string.length - 1];
+            if (operators.includes(value)) {
+                if (operators.includes(lastChar)) {
+                    string = string.slice(0, -1) + value;
+                } else {
+                    string += value;
+                }
+            } else {
+                string += value;
             }
-            string += value;
             input.value = string;
         }
     });
